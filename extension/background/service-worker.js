@@ -16,11 +16,17 @@ function connectNativeHost() {
     console.log('[AutoCursorReplay] Connecting to Native Host:', NATIVE_HOST_NAME);
     nativePort = chrome.runtime.connectNative(NATIVE_HOST_NAME);
 
-    nativePort.onMessage.addListener((message) => {
+    nativePort.onMessage.addListener(async (message) => {
       console.log('[AutoCursorReplay] Received from Native Host:', message);
       if (message.status) {
         currentStatus = message.status;
       }
+
+      // Auto-save completed recording even when popup is closed!
+      if (message.action === 'RECORDING_COMPLETE' && message.events && message.events.length > 0) {
+        await autoSaveRecording(message.events, message.screen);
+      }
+
       // Broadcast message to popup if open
       chrome.runtime.sendMessage({
         source: 'NATIVE_HOST',
@@ -47,6 +53,34 @@ function connectNativeHost() {
     currentStatus = 'disconnected';
     return null;
   }
+}
+
+async function autoSaveRecording(events, screen) {
+  const timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const profileName = `Recording ${timeString}`;
+
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['acr_profiles_v2'], (result) => {
+      let profiles = result.acr_profiles_v2 || [];
+      const newProfile = {
+        id: `profile_${Date.now()}`,
+        name: profileName,
+        version: 1,
+        createdAt: Date.now(),
+        screen: screen || { width: 1920, height: 1080 },
+        events: events
+      };
+
+      profiles.push(newProfile);
+      chrome.storage.local.set({
+        acr_profiles_v2: profiles,
+        acr_active_profile_id_v2: newProfile.id
+      }, () => {
+        console.log('[AutoCursorReplay] Automatically saved recording:', profileName);
+        resolve(newProfile);
+      });
+    });
+  });
 }
 
 chrome.runtime.onInstalled.addListener(() => {

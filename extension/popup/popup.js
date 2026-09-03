@@ -189,37 +189,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // If recording completed and sent recorded events back
-        if (payload.action === 'RECORDING_COMPLETE' && payload.events) {
-          handleRecordingFinished(payload.events, payload.screen);
+        if (payload.action === 'RECORDING_COMPLETE') {
+          handleRecordingFinished();
         }
       }
     });
   }
 
-  async function handleRecordingFinished(recordedEvents, recordedScreen) {
-    if (!recordedEvents || recordedEvents.length === 0) {
-      alert('No mouse movement recorded.');
-      return;
-    }
-    const name = prompt('Save Movement As:', `Recording ${new Date().toLocaleTimeString()}`);
-    if (!name) return;
-
-    const newProfile = {
-      id: `profile_${Date.now()}`,
-      name: name.trim(),
-      version: 1,
-      createdAt: Date.now(),
-      screen: recordedScreen || {
-        width: Math.round(window.screen.width * (window.devicePixelRatio || 1)),
-        height: Math.round(window.screen.height * (window.devicePixelRatio || 1))
-      },
-      events: recordedEvents
-    };
-
+  async function handleRecordingFinished() {
     if (window.StorageManager) {
-      profiles = await window.StorageManager.saveProfile(newProfile);
-      await window.StorageManager.setActiveProfileId(newProfile.id);
-      activeProfile = newProfile;
+      profiles = await window.StorageManager.getProfiles();
+      activeProfile = await window.StorageManager.getActiveProfile();
       renderProfilesSelect();
     }
   }
