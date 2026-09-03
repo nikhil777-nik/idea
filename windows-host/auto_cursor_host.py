@@ -74,6 +74,18 @@ def perform_click(x, y, button="left", is_dbl=False):
         user32.SendInput(1, ctypes.byref(inp_down), ctypes.sizeof(INPUT))
         user32.SendInput(1, ctypes.byref(inp_up), ctypes.sizeof(INPUT))
 
+def perform_mouse_down(x, y, button="left"):
+    set_cursor_pos(x, y)
+    flags_down = MOUSEEVENTF_LEFTDOWN if button == "left" else MOUSEEVENTF_RIGHTDOWN
+    inp_down = INPUT(type=INPUT_MOUSE, u=INPUT_UNION(mi=MOUSEINPUT(0, 0, 0, flags_down, 0, None)))
+    user32.SendInput(1, ctypes.byref(inp_down), ctypes.sizeof(INPUT))
+
+def perform_mouse_up(x, y, button="left"):
+    set_cursor_pos(x, y)
+    flags_up = MOUSEEVENTF_LEFTUP if button == "left" else MOUSEEVENTF_RIGHTUP
+    inp_up = INPUT(type=INPUT_MOUSE, u=INPUT_UNION(mi=MOUSEINPUT(0, 0, 0, flags_up, 0, None)))
+    user32.SendInput(1, ctypes.byref(inp_up), ctypes.sizeof(INPUT))
+
 def perform_scroll(delta_y):
     inp = INPUT(type=INPUT_MOUSE, u=INPUT_UNION(mi=MOUSEINPUT(0, 0, int(delta_y), MOUSEEVENTF_WHEEL, 0, None)))
     user32.SendInput(1, ctypes.byref(inp), ctypes.sizeof(INPUT))
@@ -138,12 +150,16 @@ def recording_thread():
 
         lbtn = (user32.GetAsyncKeyState(VK_LBUTTON) & 0x8000) != 0
         if lbtn and not last_lbtn:
-            g_recorded_events.append({"type": "click", "button": "left", "x": x, "y": y, "time": elapsed})
+            g_recorded_events.append({"type": "mousedown", "button": "left", "x": x, "y": y, "time": elapsed})
+        elif not lbtn and last_lbtn:
+            g_recorded_events.append({"type": "mouseup", "button": "left", "x": x, "y": y, "time": elapsed})
         last_lbtn = lbtn
 
         rbtn = (user32.GetAsyncKeyState(VK_RBUTTON) & 0x8000) != 0
         if rbtn and not last_rbtn:
-            g_recorded_events.append({"type": "click", "button": "right", "x": x, "y": y, "time": elapsed})
+            g_recorded_events.append({"type": "mousedown", "button": "right", "x": x, "y": y, "time": elapsed})
+        elif not rbtn and last_rbtn:
+            g_recorded_events.append({"type": "mouseup", "button": "right", "x": x, "y": y, "time": elapsed})
         last_rbtn = rbtn
 
         time.sleep(0.02)
@@ -192,6 +208,10 @@ def replay_thread(events, speed, loop, scale, orig_w, orig_h):
             ev_type = ev.get("type", "move")
             if ev_type == "move":
                 set_cursor_pos(tx, ty)
+            elif ev_type == "mousedown":
+                perform_mouse_down(tx, ty, ev.get("button", "left"))
+            elif ev_type == "mouseup":
+                perform_mouse_up(tx, ty, ev.get("button", "left"))
             elif ev_type == "click":
                 perform_click(tx, ty, ev.get("button", "left"), False)
             elif ev_type == "dblclick":
