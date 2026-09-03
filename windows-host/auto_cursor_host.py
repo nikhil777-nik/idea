@@ -14,15 +14,6 @@ from ctypes import wintypes
 # Win32 API Definitions via ctypes
 user32 = ctypes.windll.user32
 
-# Enable Per-Monitor High-DPI Awareness V2 for exact 1:1 pixel coordinates on scaled Windows displays
-try:
-    ctypes.windll.shcore.SetProcessDpiAwareness(2)
-except Exception:
-    try:
-        user32.SetProcessDPIAware()
-    except Exception:
-        pass
-
 class POINT(ctypes.Structure):
     _fields_ = [("x", ctypes.c_long), ("y", ctypes.c_long)]
 
@@ -157,9 +148,13 @@ def recording_thread():
 
         time.sleep(0.02)
 
+    cur_w = user32.GetSystemMetrics(0)
+    cur_h = user32.GetSystemMetrics(1)
+
     send_message({
         "action": "RECORDING_COMPLETE",
         "status": "ready",
+        "screen": {"width": cur_w, "height": cur_h},
         "events": g_recorded_events
     })
 
@@ -213,6 +208,11 @@ def replay_thread(events, speed, loop, scale, orig_w, orig_h):
 
 def main():
     global g_is_recording, g_is_playing, g_is_paused, g_speed, g_loop, g_events
+
+    try:
+        user32.SetProcessDPIAware()
+    except Exception:
+        pass
 
     threading.Thread(target=emergency_esc_watcher, daemon=True).start()
 

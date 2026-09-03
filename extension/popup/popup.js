@@ -190,13 +190,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // If recording completed and sent recorded events back
         if (payload.action === 'RECORDING_COMPLETE' && payload.events) {
-          handleRecordingFinished(payload.events);
+          handleRecordingFinished(payload.events, payload.screen);
         }
       }
     });
   }
 
-  async function handleRecordingFinished(recordedEvents) {
+  async function handleRecordingFinished(recordedEvents, recordedScreen) {
     if (!recordedEvents || recordedEvents.length === 0) {
       alert('No mouse movement recorded.');
       return;
@@ -209,9 +209,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       name: name.trim(),
       version: 1,
       createdAt: Date.now(),
-      screen: {
-        width: window.screen.width,
-        height: window.screen.height
+      screen: recordedScreen || {
+        width: Math.round(window.screen.width * (window.devicePixelRatio || 1)),
+        height: Math.round(window.screen.height * (window.devicePixelRatio || 1))
       },
       events: recordedEvents
     };
