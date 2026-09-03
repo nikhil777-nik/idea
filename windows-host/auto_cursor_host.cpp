@@ -148,6 +148,11 @@ void RecordingWorker() {
     bool lastRightBtn = false;
 
     while (g_isRecording) {
+        if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
+            g_isRecording = false;
+            break;
+        }
+
         auto now = std::chrono::high_resolution_clock::now();
         long long elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - g_recordStartTime).count();
 

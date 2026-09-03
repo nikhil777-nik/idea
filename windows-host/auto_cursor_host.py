@@ -27,6 +27,7 @@ MOUSEEVENTF_WHEEL = 0x0800
 VK_LBUTTON = 0x01
 VK_RBUTTON = 0x02
 VK_ESCAPE = 0x1B
+VK_RETURN = 0x0D
 
 class MOUSEINPUT(ctypes.Structure):
     _fields_ = [
@@ -123,6 +124,11 @@ def recording_thread():
     last_rbtn = False
 
     while g_is_recording:
+        # Pressing ENTER stops recording automatically
+        if user32.GetAsyncKeyState(VK_RETURN) & 0x8000:
+            g_is_recording = False
+            break
+
         elapsed = int((time.time() - start_time) * 1000)
         x, y = get_cursor_pos()
 
