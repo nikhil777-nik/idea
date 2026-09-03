@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto Cursor Replay</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="logo-icon">🖱️</span>
+        <div>
+          <h1 class="app-title">Auto Cursor Replay</h1>
+          <p class="app-subtitle">Record once. Replay anytime.</p>
+        </div>
+      </div>
+      <!-- Status Badge -->
+      <div id="status-pill" class="status-pill status-off">
+        <span class="status-dot"></span>
+        <span id="status-text">OFF</span>
+      </div>
+    </header>
+
+    <!-- Main Action Buttons -->
+    <section class="action-section">
+      <div id="idle-controls" class="control-group">
+        <button id="btn-start" class="btn btn-primary btn-glow">
+          <span class="btn-icon">▶</span> START REPLAY
+        </button>
+      </div>
+
+      <div id="active-controls" class="control-group hidden">
+        <button id="btn-pause" class="btn btn-warning">
+          <span class="btn-icon">⏸</span> PAUE
+        </button>
+        <button id="btn-resume" class="btn btn-success hidden">
+          <span class="btn-icon">▶</span> RESUME
+        </button>
+        <button id="btn-stop" class="btn btn-danger">
+          <span class="btn-icon">⏹</span> STOP
+        </button>
+      </div>
+    </section>
+
+    <!-- Movement Profiles Card -->
+    <section class="card">
+      <div class="card-header">
+        <label class="card-label">Movement Profile</label>
+        <div class="profile-actions">
+          <button id="btn-new-profile" class="icon-btn" title="Create New Profile">+</button>
+          <button id="btn-rename-profile" class="icon-btn" title="Rename Profile">✏️</button>
+          <button id="btn-delete-profile" class="icon-btn" title="Delete Profile">🗑️</button>
+        </div>
+      </div>
+      <div class="select-wrapper">
+        <select id="profile-select" class="custom-select"></select>
+      </div>
+    </section>
+
+    <!-- Speed Control Card -->
+    <section class="card">
+      <div class="card-header">
+        <label class="card-label">Playback Speed</label>
+        <span id="speed-value" class="badge-value">1.0x</span>
+      </div>
+      <div class="slider-container">
+        <input type="range" id="speed-slider" min="0.25" max="4.0" step="0.25" value="1.0" class="custom-slider">
+      </div>
+      <div class="preset-pills">
+        <button class="pill-btn" data-speed="0.25">0.25x</button>
+        <button class="pill-btn" data-speed="0.5">0.5x</button>
+        <button class="pill-btn active" data-speed="1.0">1x</button>
+        <button class="pill-btn" data-speed="1.5">1.5x</button>
+        <button class="pill-btn" data-speed="2.0">2x</button>
+        <button class="pill-btn" data-speed="4.0">4x</button>
+      </div>
+    </section>
+
+    <!-- Toggles Card -->
+    <section class="card toggle-card">
+      <label class="toggle-row">
+        <span class="toggle-label">🔁 Loop Playback</span>
+        <input type="checkbox" id="toggle-loop" class="custom-toggle" checked>
+      </label>
+      <label class="toggle-row">
+        <span class="toggle-label">👁️ Visible Virtual Cursor</span>
+        <input type="checkbox" id="toggle-visible" class="custom-toggle" checked>
+      </label>
+      <label class="toggle-row">
+        <span class="toggle-label">💥 Show Visual Clicks</span>
+        <input type="checkbox" id="toggle-clicks" class="custom-toggle" checked>
+      </label>
+    </section>
+
+    <!-- Record Action -->
+    <section class="record-section">
+      <button id="btn-record" class="btn btn-record">
+        <span class="btn-icon">🎥</span> Record New Movement
+      </button>
+    </section>
+
+    <!-- Expandable Customization Details -->
+    <details class="card settings-details">
+      <summary class="details-summary">⚙️ Cursor & Data Settings</summary>
+      <div class="details-content">
+        <!-- Pointer Style -->
+        <div class="setting-group">
+          <label class="card-label">Cursor Style</label>
+          <div class="segmented-control">
+            <button class="seg-btn active" data-style="default">↖ Arrow</button>
+            <button class="seg-btn" data-style="circle">⭕ Circle</button>
+            <button class="seg-btn" data-style="highlight">🌟 Highlight</button>
+          </div>
+        </div>
+
+        <!-- Size Slider -->
+        <div class="setting-group">
+          <div class="card-header">
+            <label class="card-label">Cursor Size</label>
+            <span id="size-value" class="badge-value">24px</span>
+          </div>
+          <input type="range" id="size-slider" min="16" max="48" step="2" value="24" class="custom-slider">
+        </div>
+
+        <!-- Opacity Slider -->
+        <div class="setting-group">
+          <div class="card-header">
+            <label class="card-label">Cursor Opacity</label>
+            <span id="opacity-value" class="badge-value">95%</span>
+          </div>
+          <input type="range" id="opacity-slider" min="0.3" max="1.0" step="0.05" value="0.95" class="custom-slider">
+        </div>
+
+        <!-- Import / Export Buttons -->
+        <div class="setting-group io-group">
+          <button id="btn-export" class="btn btn-secondary">
+            📤 Export JSON
+          </button>
+          <button id="btn-import" class="btn btn-secondary">
+            📥 Import JSON
+          </button>
+          <input type="file" id="import-file-input" accept=".json" class="hidden">
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <script src="../storage/storage.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
