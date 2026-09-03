@@ -3,6 +3,7 @@
   "name": "Auto Cursor Replay",
   "version": "2.0.0",
   "description": "Controls and replays actual Windows system mouse cursor movements using Chrome Native Messaging.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlC+7Kw9bEt1bSrRhxu7Xvv87fwbCJagQwIrcwr69kyxmzwlAtzuKXUUH+b5hpc5wkj21TCCuvn/4etyCdL9FbFhd6I3ng1rPfgToWMa870dd6xMzg/FXA4l/yY7AE/DsZZaewM1VSWBvvvU9/IIUX1yZAhw8N2LpOOCGnopmzriuiJf+BWEGNWNAiarw9x4inbZiIGL08zKPjvdCb+O8YqTmLOa7xP3IhDAuxINCT6Su8ClQqxvpS0+Z4dHWvZmzKIqC8hO+QFVc2bwn8fU1MRhO0Er/0R8GceHyvgDvhjTngy1EHl7rF3CfnsBqy7Psm7H+TfCVc+KK+AssHC/PowIDAQAB",
   "permissions": [
     "nativeMessaging",
     "storage",

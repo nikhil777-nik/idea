@@ -1,3 +1,6 @@
 @echo off
-rem Launcher Batch file for Auto Cursor Replay Windows Companion Native Host
-python "%~dp0auto_cursor_host.py" %*
+if exist "C:\Users\javitha\AppData\Local\Programs\Python\Python313\python.exe" (
+    "C:\Users\javitha\AppData\Local\Programs\Python\Python313\python.exe" "%~dp0auto_cursor_host.py" %*
+) else (
+    python "%~dp0auto_cursor_host.py" %*
+)
