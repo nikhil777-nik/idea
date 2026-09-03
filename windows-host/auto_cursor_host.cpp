@@ -273,6 +273,9 @@ std::string ExtractJsonField(const std::string& json, const std::string& field) 
 }
 
 int main() {
+    // Enable High-DPI Awareness for 1:1 pixel coordinate precision
+    SetProcessDPIAware();
+
     // Set binary mode for stdin/stdout on Windows
     _setmode(_fileno(stdin), _O_BINARY);
     _setmode(_fileno(stdout), _O_BINARY);

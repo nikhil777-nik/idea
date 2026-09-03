@@ -14,6 +14,15 @@ from ctypes import wintypes
 # Win32 API Definitions via ctypes
 user32 = ctypes.windll.user32
 
+# Enable Per-Monitor High-DPI Awareness V2 for exact 1:1 pixel coordinates on scaled Windows displays
+try:
+    ctypes.windll.shcore.SetProcessDpiAwareness(2)
+except Exception:
+    try:
+        user32.SetProcessDPIAware()
+    except Exception:
+        pass
+
 class POINT(ctypes.Structure):
     _fields_ = [("x", ctypes.c_long), ("y", ctypes.c_long)]
 
