@@ -1,7 +1,7 @@
-/**
- * Auto Cursor Replay - Windows Native Host (Python 3 Win32 ctypes runner)
- * Controls the REAL Windows system mouse pointer using ctypes.windll.user32.
- */
+"""
+Auto Cursor Replay - Windows Native Host (Python 3 Win32 ctypes runner)
+Controls the REAL Windows system mouse pointer using ctypes.windll.user32.
+"""
 
 import sys
 import struct
