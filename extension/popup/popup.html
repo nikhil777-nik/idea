@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto Cursor Replay</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="logo-icon">🖱️</span>
+        <div>
+          <h1 class="app-title">AUTO CURSOR REPLAY</h1>
+          <p class="app-subtitle">Real Windows Cursor Control</p>
+        </div>
+      </div>
+      <!-- Status Badge -->
+      <div id="status-pill" class="status-pill status-ready">
+        <span class="status-dot"></span>
+        <span id="status-text">READY</span>
+      </div>
+    </header>
+
+    <!-- Native Host Connection Warning (hidden by default) -->
+    <div id="connection-warning" class="warning-banner hidden">
+      <span>⚠️ Native Host Disconnected</span>
+      <button id="btn-reconnect" class="mini-btn">Reconnect</button>
+    </div>
+
+    <!-- Record Movement Primary Card -->
+    <section id="record-card" class="card primary-card">
+      <button id="btn-record" class="btn btn-record">
+        <span class="btn-icon">🔴</span> RECORD MOVEMENT
+      </button>
+      <button id="btn-stop-rec" class="btn btn-danger hidden">
+        <span class="btn-icon">⏹</span> STOP RECORDING
+      </button>
+    </section>
+
+    <!-- Movement Profile Selection -->
+    <section class="card">
+      <div class="card-header">
+        <label class="card-label">Movement Profile</label>
+        <div class="profile-actions">
+          <button id="btn-new-profile" class="icon-btn" title="Create New Profile">+</button>
+          <button id="btn-rename-profile" class="icon-btn" title="Rename Profile">✏️</button>
+          <button id="btn-delete-profile" class="icon-btn" title="Delete Profile">🗑️</button>
+        </div>
+      </div>
+      <div class="select-wrapper">
+        <select id="profile-select" class="custom-select"></select>
+      </div>
+    </section>
+
+    <!-- Replay Action Controls -->
+    <section class="action-section">
+      <div id="idle-replay-controls" class="control-group">
+        <button id="btn-play" class="btn btn-primary">
+          <span class="btn-icon">▶</span> PLAY
+        </button>
+        <button id="btn-stop" class="btn btn-danger">
+          <span class="btn-icon">⏹</span> STOP
+        </button>
+      </div>
+
+      <div id="active-replay-controls" class="control-group hidden">
+        <button id="btn-pause" class="btn btn-warning">
+          <span class="btn-icon">⏸</span> PAUSE
+        </button>
+        <button id="btn-resume" class="btn btn-success hidden">
+          <span class="btn-icon">▶</span> RESUME
+        </button>
+        <button id="btn-stop-active" class="btn btn-danger">
+          <span class="btn-icon">⏹</span> STOP
+        </button>
+      </div>
+    </section>
+
+    <!-- Speed Control Card -->
+    <section class="card">
+      <div class="card-header">
+        <label class="card-label">Playback Speed</label>
+        <span id="speed-value" class="badge-value">1.0x</span>
+      </div>
+      <div class="slider-container">
+        <input type="range" id="speed-slider" min="0.25" max="4.0" step="0.25" value="1.0" class="custom-slider">
+      </div>
+      <div class="preset-pills">
+        <button class="pill-btn" data-speed="0.25">0.25x</button>
+        <button class="pill-btn" data-speed="0.5">0.5x</button>
+        <button class="pill-btn active" data-speed="1.0">1x</button>
+        <button class="pill-btn" data-speed="1.5">1.5x</button>
+        <button class="pill-btn" data-speed="2.0">2x</button>
+        <button class="pill-btn" data-speed="4.0">4x</button>
+      </div>
+    </section>
+
+    <!-- Options Toggles Card -->
+    <section class="card toggle-card">
+      <label class="toggle-row">
+        <span class="toggle-label">🔁 Loop Playback</span>
+        <input type="checkbox" id="toggle-loop" class="custom-toggle">
+      </label>
+      <label class="toggle-row">
+        <span class="toggle-label">📐 Scale to Screen Resolution</span>
+        <input type="checkbox" id="toggle-scale" class="custom-toggle" checked>
+      </label>
+    </section>
+
+    <!-- Emergency Stop Banner -->
+    <div class="esc-notice">
+      <span>⌨ Emergency Stop: Press <kbd>ESC</kbd> on keyboard anytime</span>
+    </div>
+
+    <!-- Import / Export -->
+    <section class="io-section">
+      <button id="btn-export" class="btn btn-secondary">
+        📤 Export JSON
+      </button>
+      <button id="btn-import" class="btn btn-secondary">
+        📥 Import JSON
+      </button>
+      <input type="file" id="import-file-input" accept=".json" class="hidden">
+    </section>
+  </div>
+
+  <script src="../storage/storage.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

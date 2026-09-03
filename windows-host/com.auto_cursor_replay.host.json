@@ -1,0 +1,9 @@
+{
+  "name": "com.auto_cursor_replay.host",
+  "description": "Auto Cursor Replay Windows Companion Native Messaging Host",
+  "path": "c:\\Users\\javitha\\OneDrive\\Desktop\\idea\\windows-host\\auto_cursor_host.bat",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://*/"
+  ]
+}
