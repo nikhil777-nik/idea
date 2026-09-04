@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const toggleLoop = document.getElementById('toggle-loop');
   const toggleScale = document.getElementById('toggle-scale');
+  const toggleBoostActivity = document.getElementById('toggle-boost-activity');
 
   const btnExport = document.getElementById('btn-export');
   const btnImport = document.getElementById('btn-import');
@@ -77,6 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     toggleLoop.checked = !!currentSettings.loop;
     toggleScale.checked = currentSettings.scaleToScreen !== false;
+    if (toggleBoostActivity) toggleBoostActivity.checked = currentSettings.boostActivity !== false;
   }
 
   function updateSpeedPills(speed) {
@@ -238,6 +240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       speed: currentSettings.speed,
       loop: currentSettings.loop,
       scaleToScreen: currentSettings.scaleToScreen,
+      boostActivity: currentSettings.boostActivity !== false,
       currentScreen: { width: window.screen.width, height: window.screen.height }
     });
     if (res && res.success) {
@@ -364,6 +367,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     currentSettings.scaleToScreen = e.target.checked;
     if (window.StorageManager) await window.StorageManager.saveSettings(currentSettings);
   });
+
+  if (toggleBoostActivity) {
+    toggleBoostActivity.addEventListener('change', async (e) => {
+      currentSettings.boostActivity = e.target.checked;
+      if (window.StorageManager) await window.StorageManager.saveSettings(currentSettings);
+    });
+  }
 
   // Export JSON
   btnExport.addEventListener('click', () => {

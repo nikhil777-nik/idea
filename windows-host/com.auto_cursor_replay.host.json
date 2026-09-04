@@ -4,6 +4,7 @@
   "path": "c:\\Users\\javitha\\OneDrive\\Desktop\\idea\\windows-host\\auto_cursor_host.bat",
   "type": "stdio",
   "allowed_origins": [
+    "chrome-extension://jlepkfignocdclafpacibefcniabeoch/",
     "chrome-extension://ljpefkgiondclcfaapicebcfinbaoehc/"
   ]
 }

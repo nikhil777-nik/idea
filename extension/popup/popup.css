@@ -24,15 +24,28 @@
 }
 
 body {
-  width: 340px;
+  width: 350px;
+  max-height: 580px;
   background-color: var(--bg-main);
   background-image: 
     radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
     radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.15) 0%, transparent 40%);
   color: var(--text-primary);
-  padding: 16px;
+  padding: 14px;
   overflow-x: hidden;
+  overflow-y: auto;
   user-select: none;
+}
+
+body::-webkit-scrollbar {
+  width: 5px;
+}
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
 }
 
 .popup-container {

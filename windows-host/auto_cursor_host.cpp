@@ -89,9 +89,38 @@ std::string JsonEscape(const std::string& s) {
     return o.str();
 }
 
+void PerformMouseMove(int x, int y) {
+    int curW = GetSystemMetrics(SM_CXSCREEN);
+    int curH = GetSystemMetrics(SM_CYSCREEN);
+    if (curW <= 1) curW = 1920;
+    if (curH <= 1) curH = 1080;
+
+    LONG normX = static_cast<LONG>((x * 65535.0) / (curW - 1));
+    LONG normY = static_cast<LONG>((y * 65535.0) / (curH - 1));
+
+    INPUT input = {};
+    input.type = INPUT_MOUSE;
+    input.mi.dx = normX;
+    input.mi.dy = normY;
+    input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+
+    SendInput(1, &input, sizeof(INPUT));
+    SetCursorPos(x, y);
+}
+
+void PerformKeyboardActivityPulse() {
+    INPUT inputs[2] = {};
+    inputs[0].type = INPUT_KEYBOARD;
+    inputs[0].ki.wVk = VK_SHIFT;
+    inputs[1].type = INPUT_KEYBOARD;
+    inputs[1].ki.wVk = VK_SHIFT;
+    inputs[1].ki.dwFlags = KEYEVENTF_KEYUP;
+    SendInput(2, inputs, sizeof(INPUT));
+}
+
 // Low-level Win32 Mouse Click Simulation using SendInput
 void PerformMouseClick(int x, int y, const std::string& button, bool isDblClick) {
-    SetCursorPos(x, y);
+    PerformMouseMove(x, y);
     INPUT inputs[2] = {};
     ZeroMemory(inputs, sizeof(inputs));
 
@@ -226,14 +255,25 @@ void ReplayWorker(std::vector<MouseEvent> events, double speed, bool loop, bool 
             long long elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(now - startTime).count();
 
             if (targetTimeMs > elapsedMs) {
-                Sleep(static_cast<DWORD>(targetTimeMs - elapsedMs));
+                DWORD waitMs = static_cast<DWORD>(targetTimeMs - elapsedMs);
+                while (waitMs > 200 && g_isPlaying) {
+                    Sleep(200);
+                    waitMs -= 200;
+                    INPUT pulseInput = {};
+                    pulseInput.type = INPUT_MOUSE;
+                    pulseInput.mi.dwFlags = MOUSEEVENTF_MOVE;
+                    SendInput(1, &pulseInput, sizeof(INPUT));
+                }
+                if (waitMs > 0 && g_isPlaying) {
+                    Sleep(waitMs);
+                }
             }
 
             int targetX = static_cast<int>(ev.x * scaleX);
             int targetY = static_cast<int>(ev.y * scaleY);
 
             if (ev.type == "move") {
-                SetCursorPos(targetX, targetY);
+                PerformMouseMove(targetX, targetY);
             } else if (ev.type == "click") {
                 PerformMouseClick(targetX, targetY, ev.button.empty() ? "left" : ev.button, false);
             } else if (ev.type == "dblclick") {
